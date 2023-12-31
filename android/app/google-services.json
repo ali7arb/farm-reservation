@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "564663221594",
+    "project_id": "farmapp-71d2c",
+    "storage_bucket": "farmapp-71d2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564663221594:android:07cdddccd1c526729fc763",
+        "android_client_info": {
+          "package_name": "com.example.farms_reservation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRdDw43DVkZ3He76FYiV_cVdTgiCFPhx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
