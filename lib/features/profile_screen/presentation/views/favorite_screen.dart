@@ -25,6 +25,7 @@ class FavoriteScreen extends StatelessWidget {
       body: Obx(
         () {
           List<FarmModel> favoriteFarms = homeController.farmModel
+              // ignore: unrelated_type_equality_checks
               .where((farm) => farm.isFavorite == true)
               .toList();
           return ListView.separated(

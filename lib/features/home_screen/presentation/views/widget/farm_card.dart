@@ -52,6 +52,7 @@ class FarmCard extends StatelessWidget {
                       controller.toggleFavorite(index);
                     },
                     icon: Icon(
+                      // ignore: unrelated_type_equality_checks
                       farm.isFavorite == true
                           ? Icons.favorite
                           : Icons.favorite_border,

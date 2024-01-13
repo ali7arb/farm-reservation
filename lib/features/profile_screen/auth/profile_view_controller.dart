@@ -67,6 +67,7 @@ class ProfileViewController extends GetxController {
           .then((value) {
         getCurrentUser();
       }).catchError((e) {
+        // ignore: avoid_print
         print(e.toString());
       });
     }

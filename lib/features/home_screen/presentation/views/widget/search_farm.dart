@@ -10,7 +10,7 @@ class SearchFarm extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       onTap: () {
-        Get.to(SearchScreen());
+        Get.to(const SearchScreen());
       },
       readOnly: true,
       decoration: InputDecoration(
