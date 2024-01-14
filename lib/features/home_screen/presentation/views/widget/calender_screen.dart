@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -8,8 +9,37 @@ import '../payment_screen.dart';
 import 'app_bar.dart';
 import 'custom_button_calender.dart';
 
-class CalenderScreen extends StatelessWidget {
+class CalenderScreen extends StatefulWidget {
   const CalenderScreen({super.key});
+
+  @override
+  State<CalenderScreen> createState() => _CalenderScreenState();
+}
+
+class _CalenderScreenState extends State<CalenderScreen> {
+  DateTime currentDate = DateTime.now();
+  bool isLoading = false;
+  List<String> durations = ["12AM", "12PM", "24"];
+
+  Future<Booking?> getBookingDocument(String bookingId) async {
+    try {
+      CollectionReference bookingsCollection =
+          FirebaseFirestore.instance.collection('Bookings');
+      DocumentSnapshot bookingSnapshot =
+          await bookingsCollection.doc(bookingId).get();
+      if (bookingSnapshot.exists) {
+        Booking booking =
+            Booking.fromJson(bookingSnapshot.data() as Map<String, dynamic>);
+        return booking;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error retrieving booking document: $e');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +56,31 @@ class CalenderScreen extends StatelessWidget {
               locale: 'en_US',
               firstDay: DateTime.utc(2023, 12, 19),
               lastDay: DateTime.utc(2030, 12, 30),
-              focusedDay: DateTime.now(),
+              focusedDay: currentDate,
+              availableGestures: AvailableGestures.all,
+              onDaySelected: (selectedDay, focusedDay) async {
+                setState(() {
+                  currentDate = selectedDay;
+                });
+                Booking? booking =
+                    await getBookingDocument("PLXUgCc4eGVWZEzQNfRQ");
+                if (booking != null) {
+                  // ignore: avoid_print
+                  print('Booking Duration: ${booking.bookingDuration}');
+                  // ignore: avoid_print
+                  print('Created Date: ${booking.createdDate}');
+                  var index = durations.indexWhere((element) {
+                    return booking.bookingDuration == element;
+                  });
+                  setState(() {
+                    durations.removeAt(index);
+                  });
+                } else {
+                  // ignore: avoid_print
+                  print('Booking document not found.');
+                }
+              },
+              selectedDayPredicate: (day) => isSameDay(day, currentDate),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height / 30,
@@ -43,21 +97,13 @@ class CalenderScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomButtonCalender(
-                  text: '12 Hours Am',
-                  textColor: textColor,
-                  onPressed: () {},
-                ),
-                CustomButtonCalender(
-                  text: '12 Hours pm',
-                  textColor: textColor,
-                  onPressed: () {},
-                ),
-                CustomButtonCalender(
-                  text: '24 Hours ',
-                  textColor: textColor,
-                  onPressed: () {},
-                ),
+                ...durations.map((duration) {
+                  return CustomButtonCalender(
+                    text: duration,
+                    textColor: textColor,
+                    onPressed: () {},
+                  );
+                }).toList(),
               ],
             ),
             SizedBox(
@@ -74,4 +120,46 @@ class CalenderScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class Booking {
+  String bookingDuration;
+  DateTime createdDate;
+  DateTime bookingDate;
+  String farmID;
+  String userID;
+
+  Booking({
+    required this.bookingDuration,
+    required this.createdDate,
+    required this.bookingDate,
+    required this.farmID,
+    required this.userID,
+  });
+
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      bookingDuration: json['bookingDuration'],
+      createdDate: (json['createdDate'] as Timestamp).toDate(),
+      bookingDate: (json['bookingDate'] as Timestamp).toDate(),
+      farmID: json['farmID'],
+      userID: json['userID'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'bookingDuration': bookingDuration,
+      'createdDate': Timestamp.fromDate(createdDate),
+      'bookingDate': Timestamp.fromDate(bookingDate),
+      'farmID': farmID,
+      'userID': userID,
+    };
+  }
+}
+
+enum BookingsDuration {
+  am12,
+  pm12,
+  full24,
 }

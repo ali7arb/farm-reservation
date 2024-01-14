@@ -81,21 +81,22 @@ class DetailsScreen extends StatelessWidget {
                     currentPage: controller.currentPage.value,
                   ),
                 ),
-                Styles.textstyle30('Details:', mainColo),
-                Styles.textstyle14(
+                Styles.textstyle20('Details:', mainColo),
+                Styles.textstyle14bold(
                   farm.description ?? 'No description available',
                   Colors.black,
                 ),
-                Styles.textstyle30('Price:', mainColo),
-                Column(
-                  children: farm.price!.map((e) {
-                    return Styles.textstyle14(e, Colors.black);
-                  }).toList(),
-                ),
+                Styles.textstyle20('Price:', mainColo),
+                Styles.textstyle14bold(
+                    'From 10 AM To 9 PM : ${farm.price![0]}', Colors.black),
+                Styles.textstyle14bold(
+                    'From 11 PM To 8 AM : ${farm.price![1]}', Colors.black),
+                Styles.textstyle14bold(
+                    'From 10 AM To 8 AM : ${farm.price![2]}', Colors.black),
                 const Spacer(),
                 CustemButtonWidget(
                   onPressed: () {
-                    Get.to(const CalenderScreen());
+                    Get.to(CalenderScreen());
                   },
                   title: 'Book',
                   textColor: textColor,

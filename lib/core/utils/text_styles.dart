@@ -65,7 +65,7 @@ abstract class Styles {
     );
   }
 
-  static Text textstyle30(String title, Color color) {
+  static Text textstyle20(String title, Color color) {
     return Text(
       title,
       textAlign: TextAlign.center,
@@ -73,7 +73,7 @@ abstract class Styles {
       style: TextStyle(
         color: color,
         overflow: TextOverflow.ellipsis,
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: FontWeight.w600,
         fontFamily: 'cairo-Bold',
       ),
@@ -185,6 +185,19 @@ abstract class Styles {
         color: color,
         fontSize: 14,
         fontFamily: 'cairo-Medium',
+      ),
+    );
+  }
+
+  static Text textstyle14bold(String title, Color color) {
+    return Text(
+      title,
+      textAlign: TextAlign.start,
+      style: TextStyle(
+        color: color,
+        fontSize: 14,
+        fontFamily: 'cairo-Medium',
+        fontWeight: FontWeight.bold,
       ),
     );
   }

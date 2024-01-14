@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reservation_farm/features/home_screen/auth/home_view_controller.dart';
@@ -27,34 +28,42 @@ class HomeScreen extends StatelessWidget {
                 vertical: MediaQuery.of(context).size.height * .019,
                 horizontal: MediaQuery.of(context).size.width * .019,
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const HeadHomeScreen(),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .03,
-                    ),
-                    const SearchFarm(),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .03,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          FarmModel farm = controller.farmModel[index];
-                          return FarmCard(
-                            farm: farm,
-                            index: index,
-                          );
-                        },
-                        separatorBuilder: (context, index) => SizedBox(
-                          height: MediaQuery.of(context).size.height / 25,
-                        ),
-                        itemCount: controller.farmModel.length,
+              child: ConditionalBuilder(
+                condition: controller.farmModel.isNotEmpty ||
+                    controller.farmModel.isEmpty,
+                builder: (context) => SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      const HeadHomeScreen(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .03,
                       ),
-                    ),
-                  ],
+                      const SearchFarm(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * .03,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: ListView.separated(
+                          itemBuilder: (context, index) {
+                            FarmModel farm = controller.farmModel[index];
+                            return FarmCard(
+                              farm: farm,
+                              index: index,
+                            );
+                          },
+                          separatorBuilder: (context, index) => SizedBox(
+                            height: MediaQuery.of(context).size.height / 25,
+                          ),
+                          itemCount: controller.farmModel.length,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                fallback: (context) => const Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
             ),
