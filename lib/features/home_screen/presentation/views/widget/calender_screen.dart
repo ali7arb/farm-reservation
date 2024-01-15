@@ -21,6 +21,7 @@ class CalenderScreen extends StatefulWidget {
 class _CalenderScreenState extends State<CalenderScreen> {
   DateTime currentDate = DateTime.now();
   List<String> durations = ["12AM", "12PM", "24"];
+  List<String> availableDurations = [];
   String? selectedDuration;
 
   Future<List<Booking>> getBookingsForDate(DateTime selectedDay) async {
@@ -47,6 +48,18 @@ class _CalenderScreenState extends State<CalenderScreen> {
     return bookings;
   }
 
+  Future<void> updateAvailableDurations(DateTime selectedDay) async {
+    List<Booking> bookings = await getBookingsForDate(selectedDay);
+
+    // All durations are initially available
+    availableDurations = durations.toList();
+
+    // Remove booked durations from available durations
+    for (Booking booking in bookings) {
+      availableDurations.remove(booking.bookingDuration);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +81,8 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 setState(() {
                   currentDate = selectedDay;
                 });
+
+                await updateAvailableDurations(selectedDay);
 
                 List<Booking> bookings = await getBookingsForDate(selectedDay);
                 // Handle the list of bookings for the selected date
@@ -91,7 +106,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ...durations.map((duration) {
+                ...availableDurations.map((duration) {
                   return CustomButtonCalender(
                     text: duration,
                     textColor: textColor,
