@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reservation_farm/model/farms/farms_model.dart';
+import 'package:reservation_farm/model/users/user_model.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../../core/utils/style.dart';
@@ -10,7 +12,7 @@ import 'app_bar.dart';
 import 'custom_button_calender.dart';
 
 class CalenderScreen extends StatefulWidget {
-  const CalenderScreen({super.key});
+  const CalenderScreen({Key? key}) : super(key: key);
 
   @override
   State<CalenderScreen> createState() => _CalenderScreenState();
@@ -18,34 +20,38 @@ class CalenderScreen extends StatefulWidget {
 
 class _CalenderScreenState extends State<CalenderScreen> {
   DateTime currentDate = DateTime.now();
-  bool isLoading = false;
   List<String> durations = ["12AM", "12PM", "24"];
+  String? selectedDuration;
 
-  Future<Booking?> getBookingDocument(String bookingId) async {
+  Future<List<Booking>> getBookingsForDate(DateTime selectedDay) async {
+    List<Booking> bookings = [];
+
     try {
       CollectionReference bookingsCollection =
           FirebaseFirestore.instance.collection('Bookings');
-      DocumentSnapshot bookingSnapshot =
-          await bookingsCollection.doc(bookingId).get();
-      if (bookingSnapshot.exists) {
-        Booking booking =
-            Booking.fromJson(bookingSnapshot.data() as Map<String, dynamic>);
-        return booking;
-      } else {
-        return null;
+
+      QuerySnapshot bookingSnapshot = await bookingsCollection
+          .where('bookingDate', isEqualTo: selectedDay)
+          .get();
+
+      if (bookingSnapshot.docs.isNotEmpty) {
+        bookings = bookingSnapshot.docs.map((doc) {
+          return Booking.fromJson(doc.id, doc.data() as Map<String, dynamic>);
+        }).toList();
       }
     } catch (e) {
       // ignore: avoid_print
-      print('Error retrieving booking document: $e');
-      return null;
+      print('Error retrieving bookings for date: $e');
     }
+
+    return bookings;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(
-        text: 'Calender',
+        text: 'Calendar',
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -62,23 +68,11 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 setState(() {
                   currentDate = selectedDay;
                 });
-                Booking? booking =
-                    await getBookingDocument("PLXUgCc4eGVWZEzQNfRQ");
-                if (booking != null) {
-                  // ignore: avoid_print
-                  print('Booking Duration: ${booking.bookingDuration}');
-                  // ignore: avoid_print
-                  print('Created Date: ${booking.createdDate}');
-                  var index = durations.indexWhere((element) {
-                    return booking.bookingDuration == element;
-                  });
-                  setState(() {
-                    durations.removeAt(index);
-                  });
-                } else {
-                  // ignore: avoid_print
-                  print('Booking document not found.');
-                }
+
+                List<Booking> bookings = await getBookingsForDate(selectedDay);
+                // Handle the list of bookings for the selected date
+                // ignore: avoid_print
+                print('Bookings for ${selectedDay.toString()}: $bookings');
               },
               selectedDayPredicate: (day) => isSameDay(day, currentDate),
             ),
@@ -101,7 +95,11 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   return CustomButtonCalender(
                     text: duration,
                     textColor: textColor,
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        selectedDuration = duration;
+                      });
+                    },
                   );
                 }).toList(),
               ],
@@ -111,8 +109,38 @@ class _CalenderScreenState extends State<CalenderScreen> {
             ),
             CustemButtonWidget(
               title: 'Select Time',
-              onPressed: () {
-                Get.to(const PaymentScreen());
+              onPressed: () async {
+                FarmModel farm = FarmModel();
+                UserModel user = UserModel();
+
+                List<Booking> existingBookings =
+                    await getBookingsForDate(currentDate);
+
+                if (selectedDuration != null && existingBookings.isEmpty) {
+                  Booking newBooking = Booking(
+                    bookingDuration: selectedDuration!,
+                    createdDate: DateTime.now(),
+                    bookingDate: currentDate,
+                    farmID: farm.id ?? '',
+                    userID: user.userId ?? '',
+                    bookingId: '',
+                  );
+
+                  DocumentReference bookingReference = await FirebaseFirestore
+                      .instance
+                      .collection('Bookings')
+                      .add(newBooking.toJson());
+
+                  Get.to(() => PaymentScreen(
+                        bookingId: bookingReference.id,
+                        amount: 350,
+                      ));
+                } else {
+                  Get.snackbar(
+                    "Already Booked",
+                    "Please choose another time slot",
+                  );
+                }
               },
             ),
           ],
@@ -123,6 +151,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
 }
 
 class Booking {
+  String bookingId;
   String bookingDuration;
   DateTime createdDate;
   DateTime bookingDate;
@@ -130,6 +159,7 @@ class Booking {
   String userID;
 
   Booking({
+    required this.bookingId,
     required this.bookingDuration,
     required this.createdDate,
     required this.bookingDate,
@@ -137,13 +167,16 @@ class Booking {
     required this.userID,
   });
 
-  factory Booking.fromJson(Map<String, dynamic> json) {
+  factory Booking.fromJson(String bookingId, Map<String, dynamic> json) {
     return Booking(
-      bookingDuration: json['bookingDuration'],
-      createdDate: (json['createdDate'] as Timestamp).toDate(),
-      bookingDate: (json['bookingDate'] as Timestamp).toDate(),
-      farmID: json['farmID'],
-      userID: json['userID'],
+      bookingId: bookingId,
+      bookingDuration: json['bookingDuration'] ?? '',
+      createdDate:
+          (json['createdDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      bookingDate:
+          (json['bookingDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      farmID: json['farmID'] ?? '',
+      userID: json['userID'] ?? '',
     );
   }
 
@@ -156,10 +189,4 @@ class Booking {
       'userID': userID,
     };
   }
-}
-
-enum BookingsDuration {
-  am12,
-  pm12,
-  full24,
 }

@@ -4,7 +4,10 @@ import '../../../../core/utils/style.dart';
 import '../../../../core/widgets/custem_text_form_faild.dart';
 
 class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+  const PaymentScreen(
+      {super.key, required this.bookingId, required this.amount});
+  final String bookingId;
+  final double amount;
 
   @override
   Widget build(BuildContext context) {
