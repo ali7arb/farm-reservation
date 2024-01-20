@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reservation_farm/features/home_screen/presentation/views/home_screen.dart';
+
 import '../../../../core/utils/style.dart';
 import '../../../../core/widgets/custem_text_form_faild.dart';
+import '../../auth/payment_controller.dart';
 
 class PaymentScreen extends StatelessWidget {
-  const PaymentScreen(
-      {super.key, required this.bookingId, required this.amount});
-  final String bookingId;
-  final double amount;
+  final PaymentController controller = Get.put(PaymentController());
+
+  PaymentScreen({Key? key}) : super(key: key) {
+    Map<String, dynamic> arguments = Get.arguments ?? {};
+    controller.bookingId.value = arguments['bookingId'] ?? '';
+    controller.amount.value = arguments['amount'] ?? 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +149,9 @@ class PaymentScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.offAll(const HomeScreen());
+                      },
                       child: Row(
                         children: [
                           Text(

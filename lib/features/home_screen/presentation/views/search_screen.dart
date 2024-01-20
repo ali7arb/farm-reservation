@@ -87,7 +87,8 @@ class _SearchScreenState extends State<SearchScreen> {
       body: ListView.builder(
         itemCount: resultList.length,
         itemBuilder: (context, index) {
-          FarmModel farm = FarmModel();
+          FarmModel farm = FarmModel.fromJson(
+              resultList[index].data() as Map<String, dynamic>);
           return ListTile(
             title: InkWell(
               onTap: () {

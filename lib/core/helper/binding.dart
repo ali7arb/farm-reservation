@@ -3,7 +3,9 @@ import 'package:reservation_farm/features/profile_screen/auth/profile_view_contr
 
 import '../../features/home_screen/auth/calender_controller.dart';
 import '../../features/home_screen/auth/home_view_controller.dart';
+import '../../features/home_screen/auth/payment_controller.dart';
 import '../../features/login_screen/auth/auth_login_controller.dart';
+import '../../features/profile_screen/auth/booking_controller.dart';
 import 'local_storage_data.dart';
 
 class Binding extends Bindings {
@@ -13,6 +15,8 @@ class Binding extends Bindings {
     Get.lazyPut(() => HomeViewController());
     Get.lazyPut(() => LocalStorageData());
     Get.lazyPut(() => ProfileViewController());
-    Get.lazyPut(() => CalenderController());
+    Get.lazyPut(() => CalendarController());
+    Get.lazyPut(() => PaymentController());
+    Get.lazyPut(() => BookingController());
   }
 }

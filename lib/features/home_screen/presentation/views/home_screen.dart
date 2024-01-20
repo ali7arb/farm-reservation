@@ -23,17 +23,16 @@ class HomeScreen extends StatelessWidget {
             decoration: const BoxDecoration(
               gradient: backgroundHome,
             ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: MediaQuery.of(context).size.height * .019,
-                horizontal: MediaQuery.of(context).size.width * .019,
-              ),
-              child: ConditionalBuilder(
-                condition: controller.farmModel.isNotEmpty ||
-                    controller.farmModel.isEmpty,
-                builder: (context) => SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * .019,
+                  horizontal: MediaQuery.of(context).size.width * .019,
+                ),
+                child: ConditionalBuilder(
+                  condition: controller.farmModel.isNotEmpty ||
+                      controller.farmModel.isEmpty,
+                  builder: (context) => Column(
                     children: [
                       const HeadHomeScreen(),
                       SizedBox(
@@ -54,16 +53,16 @@ class HomeScreen extends StatelessWidget {
                             );
                           },
                           separatorBuilder: (context, index) => SizedBox(
-                            height: MediaQuery.of(context).size.height / 25,
+                            height: MediaQuery.of(context).size.height * .02,
                           ),
                           itemCount: controller.farmModel.length,
                         ),
                       ),
                     ],
                   ),
-                ),
-                fallback: (context) => const Center(
-                  child: CircularProgressIndicator(),
+                  fallback: (context) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ),
             ),

@@ -108,7 +108,7 @@ class FavoriteScreen extends StatelessWidget {
               );
             },
             separatorBuilder: (context, index) => SizedBox(
-              height: MediaQuery.of(context).size.height * .2,
+              height: MediaQuery.of(context).size.height * .02,
             ),
             itemCount: favoriteFarms.length,
           );

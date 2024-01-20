@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,28 +49,59 @@ class ProfileViewController extends GetxController {
   }
 
   void updateUser({
-    required String name,
-    required String phone,
-    required String email,
-  }) {
+    String? name,
+    String? phone,
+    String? email,
+  }) async {
     if (profileImage != null) {
-      getProfileImage();
-    } else {
-      UserModel user = UserModel(
-        name: name,
-        email: email,
-        phone: phone,
-      );
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(user.userId)
-          .update(user.toJson())
-          .then((value) {
-        getCurrentUser();
-      }).catchError((e) {
-        // ignore: avoid_print
-        print(e.toString());
-      });
+      await uploadProfileImage();
     }
+
+    UserModel updatedUser = UserModel(
+      userId: _userModel?.userId,
+      name: name ?? _userModel?.name,
+      email: email ?? _userModel?.email,
+      phone: phone ?? _userModel?.phone,
+      pic: _userModel?.pic,
+    );
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(updatedUser.userId)
+        .update(updatedUser.toJson())
+        .then((value) {
+      getCurrentUser();
+      Get.snackbar('Success', 'User data updated successfully');
+    }).catchError((e) {
+      Get.snackbar('Error', 'Failed to update user data');
+      // ignore: avoid_print
+      print(e.toString());
+    });
+
+    update();
+  }
+
+  Future<void> uploadProfileImage() async {
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child("profile_images/${_userModel?.userId}");
+
+    UploadTask uploadTask = storageReference.putFile(profileImage!);
+    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+
+    String profileImageUrl = await taskSnapshot.ref.getDownloadURL();
+
+    UserModel updatedUserWithImage = UserModel(
+      userId: _userModel?.userId,
+      name: _userModel?.name,
+      email: _userModel?.email,
+      phone: _userModel?.phone,
+      pic: profileImageUrl,
+    );
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(updatedUserWithImage.userId)
+        .update(updatedUserWithImage.toJson());
   }
 }

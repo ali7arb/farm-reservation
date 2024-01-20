@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:reservation_farm/features/profile_screen/auth/profile_view_controller.dart';
 import 'package:reservation_farm/features/profile_screen/presentation/views/widget/custom_button_profile.dart';
 import 'package:reservation_farm/features/profile_screen/presentation/views/widget/custom_clip_path.dart';
-
 import '../../../../core/utils/style.dart';
 import '../../../../core/widgets/custem_button_widget.dart';
 import '../../../home_screen/presentation/views/widget/custem_text_name.dart';
@@ -83,7 +82,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 CustomButtonProfile(
                   onPressed: () {
-                    Get.to(const MyBookingScreen());
+                    Get.to(MyBookingScreen());
                   },
                   text: 'My Booking',
                   icon: Icons.calendar_month,

@@ -96,7 +96,9 @@ class DetailsScreen extends StatelessWidget {
                 const Spacer(),
                 CustemButtonWidget(
                   onPressed: () {
-                    Get.to(CalenderScreen());
+                    Get.to(CalendarScreen(
+                      farm: farm,
+                    ));
                   },
                   title: 'Book',
                   textColor: textColor,
