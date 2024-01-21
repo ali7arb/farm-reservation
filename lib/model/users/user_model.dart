@@ -4,6 +4,7 @@ class UserModel {
   String? name;
   String? phone;
   String? pic;
+  bool isEmailVerified;
 
   UserModel({
     this.userId,
@@ -11,15 +12,16 @@ class UserModel {
     this.email,
     this.phone,
     this.pic,
-  });
+    bool? isEmailVerified,
+  }) : isEmailVerified = isEmailVerified ?? false;
 
-  UserModel.fromJson(Map<String, dynamic> map) {
-    userId = map['userId'];
-    email = map['email'];
-    name = map['name'];
-    pic = map['pic'];
-    phone = map['phone'];
-  }
+  UserModel.fromJson(Map<String, dynamic> map)
+      : userId = map['userId'],
+        email = map['email'],
+        name = map['name'],
+        pic = map['pic'],
+        phone = map['phone'],
+        isEmailVerified = map['isEmailVerified'] ?? false;
 
   Map<String, dynamic> toJson() {
     return {
@@ -28,6 +30,7 @@ class UserModel {
       'name': name,
       'pic': pic,
       'phone': phone,
+      'isEmailVerified': isEmailVerified,
     };
   }
 }

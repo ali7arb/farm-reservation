@@ -22,12 +22,13 @@ class ProfileScreen extends StatelessWidget {
     return GetBuilder<ProfileViewController>(
       init: ProfileViewController(),
       builder: (controller) {
-        ImageProvider<Object>? backgroundImage =
-            const AssetImage('assets/images/northfarm.jpg');
+        ImageProvider<Object>? backgroundImage = const NetworkImage(
+            'https://yourteachingmentor.com/wp-content/uploads/2020/12/istockphoto-1223671392-612x612-1.jpg');
         String profileName = '';
 
         if (controller.userModel != null) {
-          backgroundImage = NetworkImage(controller.userModel!.pic!);
+          backgroundImage = NetworkImage(controller.userModel!.pic ??
+              'https://yourteachingmentor.com/wp-content/uploads/2020/12/istockphoto-1223671392-612x612-1.jpg');
           profileName = controller.userModel!.name ?? '';
         }
 

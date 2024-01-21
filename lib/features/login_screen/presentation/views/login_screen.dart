@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:reservation_farm/features/login_screen/presentation/views/widgets/forgot_password_screen.dart';
 import 'package:reservation_farm/features/login_screen/presentation/views/widgets/text_button.dart';
 import '../../../../core/utils/style.dart';
 import '../../../../core/widgets/custem_text_form_faild.dart';
@@ -82,7 +83,9 @@ class LoginScreen extends GetWidget<AuthLogin> {
                     children: [
                       CustemTextButton(
                         text: 'Forgot Password?',
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(ForgotPasswordScreen());
+                        },
                       ),
                     ],
                   ),

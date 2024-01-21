@@ -40,7 +40,7 @@ class HeadHomeScreen extends StatelessWidget {
                       ),
                     ),
                     CustemTextName(
-                      name: controller.userModel?.name ?? 'Your Name',
+                      name: controller.userModel?.name ?? '',
                     ),
                   ],
                 ),

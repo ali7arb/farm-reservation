@@ -17,12 +17,13 @@ class AccountScreen extends StatelessWidget {
       body: GetBuilder<ProfileViewController>(
         init: ProfileViewController(),
         builder: (controller) {
-          controller.nameController.text = controller.userModel!.name!;
-          controller.emailController.text = controller.userModel!.email!;
-          controller.phoneController.text = controller.userModel!.phone!;
+          controller.nameController.text = controller.userModel!.name ?? '';
+          controller.emailController.text = controller.userModel!.email ?? '';
+          controller.phoneController.text = controller.userModel!.phone ?? '';
 
           var image = controller.profileImage;
-          var networkImage = NetworkImage(controller.userModel?.pic ?? '');
+          var networkImage = NetworkImage(controller.userModel?.pic ??
+              'https://yourteachingmentor.com/wp-content/uploads/2020/12/istockphoto-1223671392-612x612-1.jpg');
           return SingleChildScrollView(
             child: Column(
               children: [
