@@ -26,8 +26,7 @@ class IndicatorWidget extends StatelessWidget {
           activeDotColor: mainColo,
           spacing: 15,
         ),
-        controller: PageController(
-            initialPage: currentPage), // Use the passed currentPage value
+        controller: PageController(initialPage: currentPage),
         onDotClicked: (index) {},
       ),
     );

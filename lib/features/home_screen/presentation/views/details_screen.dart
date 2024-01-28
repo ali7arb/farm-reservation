@@ -5,7 +5,8 @@ import 'package:reservation_farm/features/home_screen/presentation/views/widget/
 import 'package:reservation_farm/features/home_screen/presentation/views/widget/calender_screen.dart';
 import 'package:reservation_farm/features/home_screen/presentation/views/widget/custem_text_name.dart';
 import 'package:reservation_farm/features/home_screen/presentation/views/widget/indicator_widget.dart';
-
+import 'package:reservation_farm/features/login_screen/presentation/views/login_screen.dart';
+import 'package:reservation_farm/features/profile_screen/auth/profile_view_controller.dart';
 import '../../../../core/utils/style.dart';
 import '../../../../core/utils/text_styles.dart';
 import '../../../../core/widgets/custem_button_widget.dart';
@@ -14,11 +15,15 @@ import '../../../../model/farms/farms_model.dart';
 class DetailsScreen extends StatelessWidget {
   final FarmModel farm;
 
-  const DetailsScreen({Key? key, required this.farm}) : super(key: key);
+  const DetailsScreen({
+    Key? key,
+    required this.farm,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final DetailsController controller = Get.put(DetailsController());
+    final ProfileViewController user = Get.put(ProfileViewController());
 
     controller.updateImageCount(farm.images);
 
@@ -96,9 +101,17 @@ class DetailsScreen extends StatelessWidget {
                 const Spacer(),
                 CustemButtonWidget(
                   onPressed: () {
-                    Get.to(CalendarScreen(
-                      farm: farm,
-                    ));
+                    if (user.userModel?.userId != null) {
+                      Get.to(CalendarScreen(
+                        farm: farm,
+                      ));
+                    } else {
+                      Get.to(LoginScreen());
+                      Get.snackbar(
+                        "Please Login",
+                        "To Book Your Farm",
+                      );
+                    }
                   },
                   title: 'Book',
                   textColor: textColor,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reservation_farm/core/utils/style.dart';
-
 import '../../../../core/utils/text_styles.dart';
 import '../../../../model/farms/farms_model.dart';
 import '../../../home_screen/auth/home_view_controller.dart';
 import '../../../home_screen/presentation/views/details_screen.dart';
 
 class FavoriteScreen extends StatelessWidget {
-  final HomeViewController homeController = Get.find();
+  final HomeViewController homeController = Get.put(HomeViewController());
 
   FavoriteScreen({super.key});
 

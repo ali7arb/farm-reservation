@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:reservation_farm/model/farms/farms_model.dart';
 
 import '../../../model/booking/booking_model.dart';
 
@@ -8,10 +9,18 @@ class CalendarController extends GetxController {
   RxList<String> availableDurations = <String>[].obs;
   RxString selectedDuration = ''.obs;
   RxList<Booking> existingBookings = <Booking>[].obs;
+  FarmModel farmModel = FarmModel();
 
   Future<void> updateAvailableDurations() async {
-    List<String> durations = ["12AM", "12PM", "24"];
-    availableDurations.assignAll(durations);
+    // List<String> durations = ["12AM", "12PM", "24"];
+    //availableDurations.assignAll(durations);
+    availableDurations.clear();
+
+    availableDurations.addAll([
+      '10AM - 9PM',
+      '11PM - 8AM',
+      '24 Hours',
+    ]);
 
     for (Booking booking in existingBookings) {
       availableDurations.remove(booking.bookingDuration);

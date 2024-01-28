@@ -8,7 +8,7 @@ import '../../../home_screen/presentation/views/widget/app_bar.dart';
 import '../../auth/booking_controller.dart';
 
 class MyBookingScreen extends StatelessWidget {
-  final BookingController bookingController = Get.find<BookingController>();
+  final BookingController bookingController = Get.put(BookingController());
 
   MyBookingScreen({
     super.key,

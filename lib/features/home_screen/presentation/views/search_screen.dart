@@ -92,7 +92,9 @@ class _SearchScreenState extends State<SearchScreen> {
           return ListTile(
             title: InkWell(
               onTap: () {
-                Get.to(DetailsScreen(farm: farm));
+                Get.to(DetailsScreen(
+                  farm: farm,
+                ));
               },
               child: Text(
                 allResult[index]['name'],
