@@ -9,6 +9,7 @@ class Booking {
   String? userID;
   String? nameFarm;
   String? location;
+  String? map;
   List<String>? images;
 
   Booking({

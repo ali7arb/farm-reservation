@@ -177,6 +177,21 @@ abstract class Styles {
     );
   }
 
+  static Text textstyle16bold(String title, Color color) {
+    return Text(
+      title,
+      textAlign: TextAlign.start,
+      maxLines: 2,
+      style: TextStyle(
+        overflow: TextOverflow.ellipsis,
+        color: color,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'cairo-Medium',
+      ),
+    );
+  }
+
   static Text textstyle14(String title, Color color) {
     return Text(
       title,

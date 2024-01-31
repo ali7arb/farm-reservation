@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:reservation_farm/model/farms/farms_model.dart';
-
 import '../../../model/booking/booking_model.dart';
 
 class CalendarController extends GetxController {
@@ -17,9 +16,9 @@ class CalendarController extends GetxController {
     availableDurations.clear();
 
     availableDurations.addAll([
-      '10AM - 9PM',
-      '11PM - 8AM',
-      '24 Hours',
+      '12AM',
+      '12PM',
+      '24',
     ]);
 
     for (Booking booking in existingBookings) {

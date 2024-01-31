@@ -30,7 +30,9 @@ class MyBookingScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 child: InkWell(
                   onTap: () {
-                    Get.to(DetailsBookingScreen());
+                    Get.to(DetailsBookingScreen(
+                      index: index,
+                    ));
                   },
                   child: Column(
                     children: [

@@ -8,6 +8,8 @@ class FarmModel {
   RxBool? isFavorite;
   List<String>? images;
   List<String>? price;
+  String? latitude;
+  String? longitude;
 
   FarmModel({
     this.id,
@@ -15,6 +17,8 @@ class FarmModel {
     this.location,
     this.description,
     this.price,
+    this.latitude,
+    this.longitude,
     bool? isFavorite,
     this.images,
   }) {
@@ -26,6 +30,8 @@ class FarmModel {
     return FarmModel(
       id: json['id'],
       name: json['name'],
+      longitude: json['longitude'],
+      latitude: json['latitude'],
       location: json['location'],
       description: json['description'],
       price: json['price'] != null ? List<String>.from(json['price']) : null,
@@ -37,6 +43,8 @@ class FarmModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['longitude'] = longitude;
+    data['latitude'] = latitude;
     data['name'] = name;
     data['location'] = location;
     data['description'] = description;

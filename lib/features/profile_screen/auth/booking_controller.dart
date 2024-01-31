@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:reservation_farm/features/profile_screen/auth/profile_view_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../model/booking/booking_model.dart';
 
@@ -30,6 +31,22 @@ class BookingController extends GetxController {
     } catch (error) {
       // ignore: avoid_print
       print('Error fetching bookings: $error');
+    }
+  }
+
+  Future<void> openMap(String latitude, longitude) async {
+    final url = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+    try {
+      await launchUrl(url);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Could not launch Map',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      // ignore: avoid_print
+      print(e.toString());
     }
   }
 }
